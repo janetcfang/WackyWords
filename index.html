@@ -1,0 +1,438 @@
+<html>
+	<head>
+	<title>Wacky Words! </title>
+	<script src='https://cdn.firebase.com/js/client/1.0.17/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css"/>
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+	
+	<script> 
+		//all wacky words
+		var words = ["Vindicate", "Prudent", "Prosaic", "Precocious", "Perfidious", "Ostentatious", "Opulent", "Nonchalant", "Intrepid", "Impute", "Hackneyed", "Fortuitous", "Florid", "Extenuating", "Exemplary", "Evanescent", "Enervating", "Emulate", "Deleterious", "Conformist", "Circuitous", "Arid", "Assiduous", "Anachronistic", "Camaraderie", "Alexipharmic", "Borborygmus", "Circumbendibus", "Dactylonomy", "Eleemosynary", "Floccinaucinihilipilification", "Pneumonoultramicroscopicsilicovolcanoconiosis", "Gongoozler", "Hebesphenomegacorona", "Ichthyophagous", "Jumentous", "Kakistocracy", "Lipogrammatist", "Musterdevillers", "Nychthemeron", "Obdiplostemonous", "Preantepenultimate", "Quocker-wodger", "Recumbentibus", "Sockdolager", "Therianthrope", "Ultracrepidarian", "Vaccimulgence", "Wiseacre", "Xenoglossy", "Yuletide",
+		"Absquatulate", "Blatherskite", "Cachinnatory",
+		"Dracontology", "Esurience",
+		"Frontispiece",
+		"Gallivant", "Haberdasher",
+		"Interrobang",
+		"Jiggery-pokery",
+		"Killick",
+		"Lollygag",
+		"Mundungus",
+		"Ninnyhammer","Opusculum"];
+		
+		//all wacky word definitions, matched up with words
+		var defi = ["To clear from blame or suspicion", "Careful cautious", "Relating to prose dull commonplace", "Unusually advanced or talented at an early age", "Faithless disloyal untrustworthy", "Showy displaying wealth", "Wealthy", "Calm casual seeming unexcited", "Fearless adventurous", "To attribute an action to particular person or group", "Cliched worn out by overuse", "Happening by luck fortunate", "Red-colored flushed gaudy ornate", "Excusing lessening the seriousness of guilt or crime", "Outstanding an example to others", "Quickly fading short-lived esp an image", "Weakening tiring", "To imitate follow an example", "Harmful, destructive, detrimental", "Person who complies with accepted rules and customs", "Indirect, taking the longest route", "Extremely dry or deathly boring", "Persistent, hard-working", "Out-of-date, not attributed to the correct historical period", "Trust, sociability amongst friends", "Having the quality or nature of an antidote to poison", "A medical condition, caused by the normal movement of gas and fluid in the intestines.", "A roundabout process or method, a twist or turn or circumlocution.", "The art of counting on the fingers.", "An adjective that pertains to alms or almsgiving or charitable actions.", "Something of little or no value.", "A lung disease that is caused by the inhalation of the very fine sand and ash dust found around volcanoes.", "A person who stands on the towpath idly watching activity.", "A solid figure with flat faces, specifically an irregular one with 21 faces, 18 of them triangular and the other three square.", "Fish-eating.", "Explained as suggesting that something is smelling like the urine of a horse.", "The government of a state by its most unprincipled citizens.", "A _____ systematically leaves one letter of the alphabet out to produce a whimsical composition", "A type of mixed grey woollen cloth, a fabric that was common in the 15th and 16th century.", "A day and a night, a period of 24 hours.", "Defined as having two sets of stamens, with the outer series opposite the petals and the inner series alternating with them.", "The fourth from the end of the series, the last but three.", "A wooden puppet on a string.", "To recline or rest.", "A heavy or knock-down blow", "A being that is part animal, part human.", "Somebody who gives opinions on matters beyond his knowledge", "Milkmaid, the milking of cows.", "A pretender to wisdom.", "The ability to speak a language without having learned it.", "Refers to all the traditional festive twelve days of Christmas.",
+		"Meaning to make off, decamp, or abscond.", "A noisy talker of blatant rubbish or the foolish talk or nonsense that such a person spouts.", "A loud or immoderate laughter.",
+		"The study of dragons", "Hunger or appetite.", "The facade of a building, the decorated front that was designed to be imposing.",
+		"The façade of a building, the decorated front that was designed to be imposing.", 
+		"To gad about in a showy fashion.", "A dealer in mens clothing.",
+		"It is a combination of an exclamation mark and a question mark.",
+		"It is a delightful word for describing underhand practices or dishonest manipulation of individuals for personal profit.",
+		"A rock or big stone that a ship used in lieu of a metal anchor.",
+		"Purposeless activity, of fooling around, spending time aimlessly or dawdling or dallying.",
+		"The stomach linings of cows or oxen that are served as food.",
+		"A person who is a fool or a simpleton.", "An assessment both appropriate and modest."];
+		
+		var wrong = [];
+		
+		var correct = [];
+		
+		var correctD = [];
+		
+		var wrongD = [];
+		
+		var score = 0;
+		
+		function resetScore () {
+			score = 0;
+			
+		}
+		
+		function initialize () {
+			wrong = [];
+			correct = [];
+	
+			resetScore();
+			playGame ("buw5");
+			
+		}
+		
+		function wordsWC () {
+			for (var i = 0; i < 20; i++){
+				var ir = "x" + i;
+				document.getElementById(ir).innerHTML = " ";
+			
+			}
+		
+			for (var i = 0; i < correct.length; i++){
+				var er = "x" + i;
+				document.getElementById(er).innerHTML = correct[i];
+			
+			}
+			
+			for (var i = 0; i < 20; i++){
+				var or = "h" + i;
+				document.getElementById(or).innerHTML = " ";
+			
+			}
+		
+			for (var i = 0; i < wrong.length; i++){
+				var ar = "h" + i;
+				document.getElementById(ar).innerHTML = wrong[i];
+			
+			}
+		
+		}
+		
+		
+		function playGame (id) {
+			
+			//experiment Part 2
+			 
+			
+			if (score >= 2400) {
+				window.location.href = "#winning";
+			}
+			
+			
+			if (id == "buw" + document.getElementById("secretK").innerHTML){
+				alert("correct!");
+				
+				correct.push(document.getElementById("secretC").innerHTML);
+				correctD.push(document.getElementById("secretA").innerHTML);
+				
+				score = score + 100;
+			}
+			
+			
+			
+			else if (id == "buw5"){
+				var w;
+			}
+			
+			else {
+				alert("wrong");
+				wrong.push(document.getElementById("secretC").innerHTML);
+				wrongD.push(document.getElementById("secretA").innerHTML);
+				score = score - 25;
+			}
+			
+			
+			//code to display definition
+			var a = Math.floor((Math.random() * 67) + 0);
+			document.getElementById("secretA").innerHTML = a;
+			document.getElementById("defin").innerHTML = defi[a];
+			
+			// code to set button values
+			for(var j = 1; j < 5; j++){ 				
+				var r = Math.floor((Math.random() * 67) + 0);
+				if (r == a){
+					var r = Math.floor((Math.random() * 67) + 0);
+				}	
+						
+				var bucID= "bu"+j;
+				document.getElementById(bucID).innerHTML = words[r];	
+			}
+			var k = Math.floor((Math.random() * 4) + 1);
+			var buID= "bu"+k;
+			//k is the number of the correct answer button
+			//buID is the ID to the correct answer button
+			document.getElementById(buID).innerHTML = words[a];
+			document.getElementById("secretC").innerHTML = words[a];
+			
+			//experiment
+			document.getElementById("secretK").innerHTML = k;
+			document.getElementById("score").innerHTML = score;
+	
+
+		}
+	
+	</script>
+  
+	</head>
+
+	<style>
+		
+		div.instructions{font-size: 40px;color: purple;}
+		
+		div.button2{font-size: 65px;color: 9966FF;}
+		
+		div.button3{font-size: 65px;color: 00CCFF;}
+		
+		div.button4{font-size: 45px;color: 00CCFF;}
+		
+		div.titleFont{font-size:90px; font-family: "Courier New"; color: 00CCFF;}
+		
+		p.font{font-size:25px; font-weight:bold; }
+		
+		p.bold{font-weight:bold; }
+		
+		div.boxed{border: 10px solid 00CCFF;border-style:groove;}
+	
+		div.whiteFont{font-size:1px; color:white;}
+		
+		div.definition{font-size: 50px;}
+		
+		div.details{font-size: 30px; color: purple; padding: 100px;}
+		
+		a{text-decoration:none;}
+		
+		div.bye { 
+		font-family: "Trebuchet MS", Helvetica, sans-serif; 
+		font-size: 100px; 
+		position: fixed; 
+		top: 200px; 
+		right: 500px; 
+		left: 650px; 
+		color: #6600CC; 
+		}
+	
+	</style>
+	
+	<body> 
+		<div  data-role="page" id="homeScreen">
+	
+			<div class = "titleFont" data-role= "header">
+				<center >Wacky Words!</center>
+			</div>		
+
+			<center>	
+			<a href="#mainScreen">	
+				<button type="button" data-inline="true" id = "buw5" onclick="initialize()" >
+				<div class = "button3"> Play </div>
+				</button>
+			</a>
+			<br>
+			<a href="#instructions">	
+				<button type="button" data-inline="true" >
+				<div class = "button3"> Instructions </div>
+				</button>
+			</a>
+			<br>
+			
+			<a href="#wordPage">	
+				<button type="button" onclick = "wordsWC()" data-inline="true" >
+				<div class = "button3"> Words Missed & Correct </div>
+				</button>
+			</a>
+			
+			</center>	
+		</div>
+		
+		<div  data-role="page" id="mainScreen">
+			<div class = "titleFont"  data-role= "header">
+				<center >Wacky Words!</center>
+			</div>			
+			
+			
+			<center data-role="content">
+			<h1 id="timer" class = "endgame"></h1>
+			
+				<div class = "definition"> Definition: <div  id="defin"> </div> </div> <br><br><br>
+				
+			 <button  id="buw1" onclick="playGame(this.id)" type="button" data-inline="true"> <div class = "button2" id="bu1"> Word 1 </div> </button><br><br>
+			
+			 <button  id="buw2" onclick="playGame(this.id)" type="button" data-inline="true"> <div class = "button2" id="bu2"> Word 2 </div> </button><br><br>
+			
+			 <button  id="buw3" onclick="playGame(this.id)" type="button" data-inline="true"> <div class = "button2" id="bu3"> Word 3 </div> </button><br><br>
+			
+			 <button  id="buw4" onclick="playGame(this.id)" type="button" data-inline="true"> <div class = "button2" id="bu4"> Word 4 </div> </button><br><br>
+			
+			
+			</center>	
+			<div class = "boxed">
+			<center> <div class = "definition"> Score: <div id = "score" class = "button2"> 0 </div> </div>
+				
+			</center>
+			</div>
+			<p> <br>
+			<a href="#homeScreen">	
+				<button type="button" onclick = "resetScore()" data-inline="true" >
+				<div class = "button3"> Home </div>
+				</button>
+			</a>
+			
+			
+			
+	
+			<a href="#instructions">	
+				<button type="button" data-inline="true" >
+				<div class = "button3"> Instructions </div>
+				</button>
+			</a>	
+		
+				
+		
+		
+			
+
+			
+			<div class = "whiteFont" id = "secretK" > </div>
+			<div  class = "whiteFont" id = "secretC" > </div>
+			<div  class = "whiteFont" id = "secretA" > </div>
+		
+		</div>
+		<div data-role="page" id="instructions">
+			<div class = "titleFont" data-role= "header">
+				<center>Instructions</center>
+			</div>		
+	
+		
+		<div class = "details"> 
+				<br> <br>
+			Once you click the <i> PLAY </i> button, the game will start!
+			You will have 1 minute to answer as many questions as you can. 
+			
+			You will be <br> <br> given a definition of a word at the top of the screen and 4 multiple choice answers. 
+			
+			If you correctly identify the definitions word, then  <br> <br> you will gain 150 points.
+			
+			If you pick an incorrect word, then you will lose 25 points. Once you get to 2400 points or more, you WIN! </div>
+			<center>
+			<a href="#homeScreen">	
+				<button type="button" data-inline="true" >
+				<div class = "button4"> Home </div>
+				</button>
+			</a>
+			</center>	
+			
+
+		
+		</div>
+		
+		
+			
+	
+		<div data-role = "page"  id = "winning"> 
+			<div><div id = "final" class = "bye"> You Win! </div> </div> 
+		
+			<a href="#wordPage">	
+				<button type="button" onclick = "wordsWC()" data-inline="true" >
+				<div class = "button3"> Words Missed & Correct </div>
+				</button>
+			</a>
+			
+			<a href="#homeScreen">	
+				<button type="button"  data-inline="true" >
+				<div class = "button3"> Home </div>
+				</button>
+			</a>
+		
+		</div> 
+		
+		
+		<div data-role = "page"  id = "last"> 
+			<div><div id = "final" class = "bye"> Game Over! </div> </div> 
+
+			<a href="#wordPage">	
+				<button type="button" onclick = "wordsWC()" data-inline="true" >
+				<div class = "button3"> Words Missed & Correct </div>
+				</button>
+			</a>
+			
+			<a href="#homeScreen">	
+				<button type="button"  data-inline="true" >
+				<div class = "button3"> Home </div>
+				</button>
+			</a>
+		
+		</div> 
+		
+		<div  data-role="page" id="wordPage">
+		
+		<div class= "button3"> Words Correct: </div>
+	
+		<div class = "definition" id = "x0"> </div>
+		<div class = "definition" id = "x1"> </div>
+		<div class = "definition" id = "x2"> </div>
+		<div class = "definition" id = "x3"> </div>
+		<div class = "definition" id = "x4"> </div>
+		<div class = "definition" id = "x5"> </div>
+		<div class = "definition" id = "x6"> </div>
+		<div class = "definition" id = "x7"> </div>
+		<div class = "definition" id = "x8"> </div>
+		<div class = "definition" id = "x9"> </div>
+		<div class = "definition" id = "x10"> </div>
+		<div class = "definition" id = "x11"> </div>
+		<div class = "definition" id = "x12"> </div>
+		<div class = "definition" id = "x13"> </div>
+		<div class = "definition" id = "x14"> </div>
+		<div class = "definition" id = "x15"> </div>
+		<div class = "definition" id = "x16"> </div>
+		<div class = "definition" id = "x17"> </div>
+		<div class = "definition" id = "x18"> </div>
+		<div class = "definition" id = "x19"> </div>
+		<div class = "definition" id = "x20"> </div>
+		
+		<div class= "button2"> Words Incorrect: </div>
+	
+	<br> <br>
+		<div class = "definition" id = "h0"> </div>
+		<div class = "definition" id = "h1"> </div>
+		<div class = "definition" id = "h2"> </div>
+		<div class = "definition" id = "h3"> </div>
+		<div class = "definition" id = "h4"> </div>
+		<div class = "definition" id = "h5"> </div>
+		<div class = "definition" id = "h6"> </div>
+		<div class = "definition" id = "h7"> </div>
+		<div class = "definition" id = "h8"> </div>
+		<div class = "definition" id = "h9"> </div>
+		<div class = "definition" id = "h10"> </div>
+		<div class = "definition" id = "h11"> </div>
+		<div class = "definition" id = "h12"> </div>
+		<div class = "definition" id = "h13"> </div>
+		<div class = "definition" id = "h14"> </div>
+		<div class = "definition" id = "h15"> </div>
+		<div class = "definition" id = "h16"> </div>
+		<div class = "definition" id = "h17"> </div>
+		<div class = "definition" id = "h18"> </div>
+		<div class = "definition" id = "h19"> </div>
+		<div class = "definition" id = "h20"> </div>
+		
+		<center>
+			<a href="#homeScreen">	
+				<button type="button"  data-inline="true" >
+				<div class = "button3"> Home </div>
+				</button>
+			</a>
+		</center>
+		</div>
+		
+		
+		
+		<script>
+		$("#buw5").click(function () {
+			var sec=0;
+			var min=0;
+			setInterval(function(){
+				sec++;
+				if ( sec==62){
+					min++;
+					
+				}
+				if (sec > 58){
+				//<button onclick='foo'>Go</button>
+					window.location.href = "#last"; 
+					sec = 0; 
+				
+				}
+				else{
+					document.getElementById("timer").innerHTML= sec; 
+
+						
+				} 
+				
+				
+				
+			},1000);
+			
+		});
+		</script>
+	</body>
+</html>
+
+
+
+
+
