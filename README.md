@@ -1,4 +1,4 @@
-# WackyWords
+# Wacky Word
 <b> Girls Who Code Facebook HQ 2014 </b>
 <br>
 <b> Summer Immersion Program Final Project </b>
